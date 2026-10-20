@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: distributed-app-stable
+  labels:
+    app: distributed-app
+    track: stable
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: distributed-app
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: distributed-app
+        track: stable
+    spec:
+      containers:
+        - name: distributed-app
+          image: distributed-app:v2
+          imagePullPolicy: Never
+          env:
+            - name: APP_VERSION
+              value: "v2"
+            - name: APP_MESSAGE
+              value: "Versión v2 (Estable 80%) - producción estándar"
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 2
+            periodSeconds: 3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: distributed-app-canary
+  labels:
+    app: distributed-app
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: distributed-app
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: distributed-app
+        track: canary
+    spec:
+      containers:
+        - name: distributed-app
+          image: distributed-app:v3
+          imagePullPolicy: Never
+          env:
+            - name: APP_VERSION
+              value: "v3"
+            - name: APP_MESSAGE
+              value: "Versión v3 (Canary 20%) - candidata en evaluación"
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 2
+            periodSeconds: 3

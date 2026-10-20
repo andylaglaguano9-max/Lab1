@@ -1,0 +1,16 @@
+# Dependencias y entornos
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de Word y temporales de oficina
+*.docx
+*.doc
+*.zip
+*.tmp
+~$*.docx
+
+# Salidas temporales de pruebas y métricas
+summary*.json
+degradation-results*.json
